@@ -37,6 +37,8 @@ class Product extends ActiveRecord
             [['description'], 'string'],
             [['name'], 'string', 'max' => 150],
             [['image_path'], 'string', 'max' => 250],
+            [['name', 'quantity', 'description', 'price'], 'required'],
+            ['name', 'unique'],
         ];
     }
 
@@ -54,5 +56,19 @@ class Product extends ActiveRecord
             'image_path' => 'Image Path',
             'employee_id' => 'Employee ID',
         ];
+    }
+
+    /**
+     * @return $this
+     */
+    public function getCategories()
+    {
+        return $this->hasMany(Category::className(), ['id' => 'category_id'])
+            ->viaTable('product_category', ['product_id' => 'id']);
+    }
+
+    public function getEmployee()
+    {
+        return $this->hasOne(Employee::className(), ['id' => 'employee_id']);
     }
 }

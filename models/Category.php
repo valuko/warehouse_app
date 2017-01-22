@@ -28,6 +28,7 @@ class Category extends ActiveRecord
     {
         return [
             [['name'], 'string', 'max' => 100],
+            ['name', 'unique']
         ];
     }
 
@@ -40,5 +41,14 @@ class Category extends ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
         ];
+    }
+
+    /**
+     * @return $this
+     */
+    public function getProducts()
+    {
+        return $this->hasMany(Product::className(), ['id' => 'product_id'])
+            ->viaTable('product_category', ['category_id' => 'id']);
     }
 }

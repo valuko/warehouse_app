@@ -49,4 +49,8 @@ class Employee extends ActiveRecord
             'password' => 'Password',
         ];
     }
+
+    public function getProducts() {
+        return $this->hasMany(Product::className(), ['employee_id' =>'id']);
+    }
 }
