@@ -6,6 +6,7 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
+use app\models\Employee;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
@@ -63,12 +64,42 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
+    public function actionLogin()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $params = Yii::$app->request->post('Employee');
+        if (empty($params)) {
+            return $this->render('login', [
+                'model' => new Employee(),
+            ]);
+        }
+        $user = Employee::findByUsername($params['username']);
+
+        if (empty($user)) {
+            // Error here
+            Yii::$app->getSession()->setFlash('error', "Incorrect username-password");
+            return $this->render('login', ['model' => new Employee()]);
+        }
+        if (!$user->validatePassword($params['password'])) {
+            // Return password error here
+            Yii::$app->getSession()->setFlash('error', "Incorrect username-password pair");
+            return $this->render('login', ['model' => new Employee()]);
+        }
+
+        Yii::$app->user->login($user);
+
+        return $this->redirect(['employee/index']);
+    }
+
     /**
      * Login action.
      *
      * @return string
      */
-    public function actionLogin()
+    public function actionLogin2()
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
