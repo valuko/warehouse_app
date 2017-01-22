@@ -84,13 +84,27 @@ class EmployeeController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
+        // Check if the password was updated
+        $params = Yii::$app->request->post();
+        if (empty($params)) {
             return $this->render('update', [
                 'model' => $model,
             ]);
+        } else {
+            if ($model->password == $params['Employee']['password']) {
+                unset($params['Employee']['password']);
+            }
+            if ($model->load($params) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
         }
+
+
+
     }
 
     /**
