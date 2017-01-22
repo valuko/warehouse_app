@@ -15,18 +15,16 @@ use dosamigos\ckeditor\CKEditor;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'quantity')->textInput() ?>
+    <?= $form->field($model, 'quantity')->textInput(['type' => 'number']) ?>
 
-    <?= $form->field($model, 'price')->textInput() ?>
+    <?= $form->field($model, 'price')->textInput(['type' => 'number']) ?>
 
     <?= $form->field($model, 'description')->widget(CKEditor::className(), [
         'options' => ['rows' => 6],
         'preset' => 'basic'
     ]) ?>
 
-    <?= $form->field($model, 'image_path')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'employee_id')->textInput() ?>
+    <?= $form->field($model, 'image_path')->fileInput(['accept' => "image/*"]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
