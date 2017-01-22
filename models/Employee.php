@@ -101,7 +101,6 @@ class Employee extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        // TODO: Implement findIdentity() method.
         return self::findOne($id);
     }
 
@@ -116,7 +115,6 @@ class Employee extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        // TODO: Implement findIdentityByAccessToken() method.
         return self::find()->where('MD5(username) = :username', ['username' => $token]);
     }
 
@@ -126,7 +124,6 @@ class Employee extends ActiveRecord implements IdentityInterface
      */
     public function getId()
     {
-        // TODO: Implement getId() method.
         return $this->id;
     }
 
@@ -144,7 +141,6 @@ class Employee extends ActiveRecord implements IdentityInterface
      */
     public function getAuthKey()
     {
-        // TODO: Implement getAuthKey() method.
         return md5($this->username);
     }
 
@@ -158,7 +154,6 @@ class Employee extends ActiveRecord implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-        // TODO: Implement validateAuthKey() method.
         return md5($this->username) == $authKey;
     }
 }

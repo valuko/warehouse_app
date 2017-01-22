@@ -30,6 +30,22 @@ class EmployeeController extends Controller
     }
 
     /**
+     * @inheritdoc
+     */
+    public function beforeAction($action) {
+        $session = Yii::$app->session;
+
+        if (!$session->isActive) {
+            $session->open();
+        }
+        if (Yii::$app->user->isGuest) {
+            Yii::$app->getSession()->setFlash('error', 'Login to access this section');
+            return $this->redirect(['site/login']);
+        }
+        return parent::beforeAction($action);
+    }
+
+    /**
      * Lists all Employee models.
      * @return mixed
      */
