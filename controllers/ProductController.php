@@ -69,7 +69,7 @@ class ProductController extends Controller
         $model->isNewRecord = true;
 
         if (!Yii::$app->request->isPost) {
-            return $this->render('update', [
+            return $this->render('create', [
                 'model' => $model,
             ]);
         }
