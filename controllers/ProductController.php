@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ProductForm;
 use Yii;
 use app\models\Product;
 use app\models\ProductSearch;
@@ -63,15 +64,27 @@ class ProductController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Product();
+        //$model = new Product();
+        $model = new ProductForm();
+        $model->isNewRecord = true;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
+        $params = Yii::$app->request->post();
+        if (empty($params)) {
+            return $this->render('update', [
                 'model' => $model,
             ]);
+        } else {
+            $params['Product']['employee_id'] = Yii::$app->user->id;
+            if ($model->load($params) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
         }
+
+
     }
 
     /**
