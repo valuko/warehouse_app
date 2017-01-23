@@ -26,6 +26,8 @@ use dosamigos\ckeditor\CKEditor;
 
     <?= $form->field($model, 'image_path')->fileInput(['accept' => "image/*"]) ?>
 
+    <?= $form->field($model, 'categories')->dropDownList($model->getCategoryListItems(), ['multiple' => true]) ?>
+
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
