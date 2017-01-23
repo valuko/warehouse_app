@@ -77,7 +77,7 @@ class ProductForm extends Model
      */
     public function getCategoryListItems()
     {
-        $categories = $this->getCategories();
+        $categories = $this->getAllCategories();
         if (empty($categories)) {
             return [];
         }
@@ -88,7 +88,7 @@ class ProductForm extends Model
      * Gets the available categories while hiding the exception error
      * @return array|null|\yii\db\ActiveRecord[]
      */
-    private function getCategories()
+    private function getAllCategories()
     {
         try {
             $categories = Category::find()->all();
@@ -151,6 +151,8 @@ class ProductForm extends Model
         foreach ($this->categories as $category) {
             $product->link('categories', $category);
         }
+
+        $this->id = $product->id;
 
         return true;
     }
