@@ -14,12 +14,14 @@ use yii\helpers\ArrayHelper;
 
 class ProductForm extends Model
 {
-
+    public $id;
     public $name;
     public $description;
     public $quantity;
     public $price;
     public $image_path;
+    public $categories;
+    public $isNewRecord;
 
 
     /**
@@ -32,7 +34,7 @@ class ProductForm extends Model
             [['name', 'description', 'quantity', 'price'], 'required'],
             // extra type validations
             ['quantity', 'integer'],
-            ['price', 'float'],
+            ['price', 'double'],
         ];
     }
 
