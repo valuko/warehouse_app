@@ -54,6 +54,8 @@ class ProductForm extends Model
 
     public $categories;
 
+    private $fileUploaded = false;
+
 
     /**
      * @return array the validation rules.
@@ -67,7 +69,7 @@ class ProductForm extends Model
             ['quantity', 'integer'],
             ['price', 'double'],
             ['category_ids', 'each', 'rule' => ['integer']],
-            [['image_path'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg,jpeg'],
+            [['image_path'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg,jpeg'],
         ];
     }
 
@@ -114,9 +116,16 @@ class ProductForm extends Model
             $this->addError('category_ids', 'Some categories are not valid');
             return false;
         }
-        if (!$this->upload()) {
-            $this->addError('image_path', 'Image upload failed');
-            return false;
+        if ($this->isNewRecord || !empty($this->image_path->error)) {
+            if (empty($this->image_path->error)) {
+                $this->addError('image_path', 'Image file must be provided');
+                return false;
+            }
+            if (!$this->upload()) {
+                $this->addError('image_path', 'Image upload failed');
+                return false;
+            }
+            $this->fileUploaded = true;
         }
 
         return true;
@@ -141,7 +150,9 @@ class ProductForm extends Model
         $product = new Product();
         $product->load($this->attributes, '');
         // Fill this separately since its an object
-        $product->image_path = $this->image_path->name;
+        if (!empty($this->image_path)) {
+            $product->image_path = $this->image_path->name;
+        }
 
         if (!$product->save()) {
             // unexpected error
@@ -155,5 +166,13 @@ class ProductForm extends Model
         $this->id = $product->id;
 
         return true;
+    }
+
+    public function fill(Product $product)
+    {
+        $this->load($product->attributes, '');
+        $this->isNewRecord = false;
+
+        $this->category_ids = ArrayHelper::getColumn($product->categories, 'id');
     }
 }
