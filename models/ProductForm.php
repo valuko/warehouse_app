@@ -128,7 +128,7 @@ class ProductForm extends Model
      */
     private function upload()
     {
-        return $this->image_path->saveAs('uploads/' . $this->image_path->baseName . '.' . $this->image_path->extension);
+        return $this->image_path->saveAs(Yii::$app->params['uploadPath'] . $this->image_path->baseName . '.' . $this->image_path->extension);
     }
 
     public function save()
