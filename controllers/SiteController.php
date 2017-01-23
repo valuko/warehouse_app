@@ -72,12 +72,13 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $params = Yii::$app->request->post('Employee');
-        if (empty($params)) {
+        if (!Yii::$app->request->isPost) {
             return $this->render('login', [
                 'model' => new Employee(),
             ]);
         }
+
+        $params = Yii::$app->request->post('Employee');
         $user = Employee::findByUsername($params['username']);
 
         if (empty($user)) {
