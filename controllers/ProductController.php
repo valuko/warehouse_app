@@ -102,15 +102,27 @@ class ProductController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $product = $this->findModel($id);
+        $model = new ProductForm();
+        $model->fill($product);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        if (!Yii::$app->request->isPost) {
+            return $this->render('update', ['model' => $model]);
         }
+
+        $params = Yii::$app->request->post();
+        $model->load($params);
+        $model->image_path = UploadedFile::getInstance($model, 'image_path');
+
+        if (!$model->validate()) {
+            return $this->render('update', ['model' => $model]);
+        }
+
+        if (!$model->save($product)) {
+            return $this->render('update', ['model' => $model]);
+        }
+
+        return $this->redirect(['view', 'id' => $model->id]);
     }
 
     /**
