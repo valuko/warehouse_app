@@ -69,7 +69,7 @@ class ProductForm extends Model
             ['quantity', 'integer'],
             ['price', 'double'],
             ['category_ids', 'each', 'rule' => ['integer']],
-            [['image_path'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg,jpeg'],
+            //[['image_path'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
         ];
     }
 
@@ -117,7 +117,7 @@ class ProductForm extends Model
             return false;
         }
         if ($this->isNewRecord || !empty($this->image_path->error)) {
-            if (empty($this->image_path->error)) {
+            if (!empty($this->image_path->error)) {
                 $this->addError('image_path', 'Image file must be provided');
                 return false;
             }
