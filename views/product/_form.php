@@ -11,7 +11,7 @@ use dosamigos\ckeditor\CKEditor;
 
 <div class="product-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
@@ -26,7 +26,7 @@ use dosamigos\ckeditor\CKEditor;
 
     <?= $form->field($model, 'image_path')->fileInput(['accept' => "image/*"]) ?>
 
-    <?= $form->field($model, 'categories')->dropDownList($model->getCategoryListItems(), ['multiple' => true]) ?>
+    <?= $form->field($model, 'category_ids')->dropDownList($model->getCategoryListItems(), ['multiple' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
