@@ -131,15 +131,27 @@ class ProductForm extends Model
         return $this->image_path->saveAs(Yii::$app->params['uploadPath'] . $this->image_path->baseName . '.' . $this->image_path->extension);
     }
 
+    /**
+     * Saves the product to the DB
+     * @return bool
+     */
     public function save()
     {
-
         // Populate the appropriate model and then save
         $product = new Product();
-        // Prefill
-        $categoryIds = $this->category_ids;
-        $product->load($this->attributes);
+        $product->load($this->attributes, '');
+        // Fill this separately since its an object
+        $product->image_path = $this->image_path->name;
 
-        //$user->link('markets', $market);
+        if (!$product->save()) {
+            // unexpected error
+            return false;
+        }
+
+        foreach ($this->categories as $category) {
+            $product->link('categories', $category);
+        }
+
+        return true;
     }
 }
