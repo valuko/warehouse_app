@@ -118,6 +118,7 @@ class ProductController extends Controller
             return $this->render('update', ['model' => $model]);
         }
 
+        $model->employee_id = $product->employee_id;
         if (!$model->save($product)) {
             return $this->render('update', ['model' => $model]);
         }

@@ -142,16 +142,23 @@ class ProductForm extends Model
 
     /**
      * Saves the product to the DB
+     * @param Product|null $product
      * @return bool
      */
-    public function save()
+    public function save(Product $product=null)
     {
         // Populate the appropriate model and then save
-        $product = new Product();
+        if (empty($product)) {
+            $product = new Product();
+        }
+
+        $currentImagePath = $product->image_path;
         $product->load($this->attributes, '');
         // Fill this separately since its an object
         if (!empty($this->image_path)) {
             $product->image_path = $this->image_path->name;
+        } else {
+            $product->image_path = $currentImagePath;
         }
 
         if (!$product->save()) {
