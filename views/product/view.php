@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Product */
@@ -31,10 +32,26 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             'quantity',
-            'price',
-            'description:ntext',
-            'image_path',
-            'employee_id',
+            [
+                'label' => 'Price (EUR)',
+                'value' => $model->price,
+            ],
+            'description:html',
+            [
+                'label' => 'Created By',
+                'value' => Html::a($model->employee->username, ['employee/view', 'id' => $model->employee->id], ['class' => 'profile-link']),
+                'format' => 'raw'
+            ],
+            [
+                'label' => 'Categories',
+                'value' => implode("<br>", ArrayHelper::getColumn($model->categories, 'name')),
+                'format' => 'html',
+            ],
+            [
+                'label' => 'Image',
+                'value' => '../../uploads/'.$model->image_path,
+                'format' => ['image',['width'=>'200','height'=>'200']]
+            ]
         ],
     ]) ?>
 
