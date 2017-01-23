@@ -153,6 +153,8 @@ class ProductForm extends Model
         }
 
         $currentImagePath = $product->image_path;
+        $currentCategories = $product->categories;
+
         $product->load($this->attributes, '');
         // Fill this separately since its an object
         if (!empty($this->image_path)) {
@@ -166,8 +168,24 @@ class ProductForm extends Model
             return false;
         }
 
-        foreach ($this->categories as $category) {
-            $product->link('categories', $category);
+        // Compute the diff
+        if (!empty($currentCategories)) {
+            // compute the diff here
+            $diff = $this->findCategoriesDiff($currentCategories);
+            if (!empty($diff['removed'])) {
+                foreach ($diff['removed'] as $item) {
+                    $product->unlink('categories', $item);
+                }
+            }
+            if (!empty($diff['added'])) {
+                foreach ($diff['added'] as $item) {
+                    $product->link('categories', $item);
+                }
+            }
+        } else {
+            foreach ($this->categories as $category) {
+                $product->link('categories', $category);
+            }
         }
 
         $this->id = $product->id;
@@ -181,5 +199,38 @@ class ProductForm extends Model
         $this->isNewRecord = false;
 
         $this->category_ids = ArrayHelper::getColumn($product->categories, 'id');
+    }
+
+    /**
+     * Finds the differences between the current categories passed in and the new categories in the form object
+     * @param Category[] $categories
+     * @return array
+     */
+    private function findCategoriesDiff($categories)
+    {
+        $categoryIds = ArrayHelper::getColumn($categories, 'id');
+        $removedIds = array_diff($categoryIds, $this->category_ids);
+        $addedIds = array_diff($this->category_ids, $categoryIds);
+
+        // Now put together the list of the diff
+        $diff = [];
+        if (!empty($removedIds)) {
+            $diff['removed'] = [];
+            foreach ($categories as $category) {
+                if (in_array($category->id, $removedIds)) {
+                    $diff['removed'][] = $category;
+                }
+            }
+        }
+        if (!empty($addedIds)) {
+            $diff['added'] = [];
+            foreach ($this->categories as $category) {
+                if (in_array($category->id, $addedIds)) {
+                    $diff['added'][] = $category;
+                }
+            }
+        }
+
+        return $diff;
     }
 }
