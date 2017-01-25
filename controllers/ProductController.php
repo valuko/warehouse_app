@@ -6,6 +6,7 @@ use app\models\ProductForm;
 use Yii;
 use app\models\Product;
 use app\models\ProductSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -22,6 +23,15 @@ class ProductController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -29,22 +39,6 @@ class ProductController extends Controller
                 ],
             ],
         ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function beforeAction($action) {
-        $session = Yii::$app->session;
-
-        if (!$session->isActive) {
-            $session->open();
-        }
-        if (Yii::$app->user->isGuest) {
-            Yii::$app->getSession()->setFlash('error', 'Login to access this section');
-            return $this->redirect(['site/login']);
-        }
-        return parent::beforeAction($action);
     }
 
     /**
