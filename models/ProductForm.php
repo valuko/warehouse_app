@@ -92,13 +92,7 @@ class ProductForm extends Model
      */
     private function getAllCategories()
     {
-        try {
-            $categories = Category::find()->all();
-            return $categories;
-        } catch (\Exception $exception) {
-            // Silently handle the exception here
-            return null;
-        }
+        return Category::find()->all();
     }
 
     /**
